@@ -16,15 +16,15 @@ export class MemberService {
 			const result = await this.memberModel.create(input);
       return result;
     } catch (err) {
-			console.log('Error, Service.model:', err);
-      throw new BadRequestException(err);
+			console.log('Error, Service.model:', err.message);
+      throw new BadRequestException(Message.USED_MEMBER_NICK_OR_PHONE);
     }
 	}
 
 	public async login(input: LoginInput): Promise<Member> {
     const { memberNick, memberPassword } = input;
     const response: Member = await this.memberModel
-    .findOne({ memberNick: memberNick})
+			.findOne({ memberNick: memberNick })
     .select('+memberPassword')
     .exec();
 
