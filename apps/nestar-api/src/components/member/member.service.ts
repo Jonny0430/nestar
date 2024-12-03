@@ -16,7 +16,7 @@ export class MemberService {
 			const result = await this.memberModel.create(input);
       return result;
     } catch (err) {
-      console.log('Error, Service.model:', err);
+			console.log('Error, Service.model:', err);
       throw new BadRequestException(err);
     }
 	}
