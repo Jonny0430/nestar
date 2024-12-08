@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MemberService } from './member.service';
-import { InternalServerErrorException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { InternalServerErrorException, UseGuards } from '@nestjs/common';
 import { LoginInput, MemberInput } from '../../libs/dto/member/member.input';
 import { Member } from '../../libs/dto/member/member';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -9,6 +9,8 @@ import { ObjectId } from 'mongoose';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { MemberType } from '../../libs/enums/member,enum';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MemberUpdate } from '../../libs/dto/member/member.update';
+
 @Resolver()
 export class MemberResolver {
   constructor(private readonly memberService: MemberService) {}
@@ -32,25 +34,20 @@ export class MemberResolver {
   
 }
    
+  //Authenticeted
   @UseGuards(AuthGuard)
-  @Mutation(() => String)
-  public async updateMember(@AuthMember('_id') memberId: ObjectId): Promise<string> {
-    console.log('Mutation: updateMember');
-    console.log(typeof memberId);
-    console.log(memberId);
-		return this.memberService.updateMember();
-  }
+  @Mutation(() => Member)
+	public async updateMember(
+		@Args('input') input: MemberUpdate,
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
+		console.log('memberId:', memberId);
+		delete input._id;
+		return this.memberService.updateMember(memberId, input);
+	}
 
 
-  @UseGuards(AuthGuard)
-  @Query(() => String)
-  public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
-    console.log('Query: checkAuth');
-    console.log('memberNick:', memberNick);
-		return `Hi${memberNick}`;
-  }
-
-  @Roles(MemberType.USER, MemberType.AGENT)
+@Roles(MemberType.USER, MemberType.AGENT)
   @UseGuards(AuthGuard)
   @Query(() => String)
   public async checkAuthRoles(@AuthMember() authMember: Member): Promise<string> {
@@ -83,4 +80,14 @@ export class MemberResolver {
      console.log('Mutation: updateMemberByAdmin');
      return this.memberService.updateMemberByAdmin();
    }
+   
+  @UseGuards(AuthGuard)
+  @Query(() => String)
+  public async checkAuth(@AuthMember('memberNick') memberNick: string): Promise<string> {
+    console.log('Query: checkAuth');
+    console.log('memberNick:', memberNick);
+		return `Hi${memberNick}`;
+  }
+
+  
 }
