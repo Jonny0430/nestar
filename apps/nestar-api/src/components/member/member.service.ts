@@ -7,10 +7,12 @@ import { MemberStatus } from '../../libs/enums/member,enum';
 import {  Message } from '../../libs/enums/common.enums';
 import { AuthService } from '../auth/auth.service';
 import { MemberUpdate } from '../../libs/dto/member/member.update';
+import { T } from '../../libs/types/common';
 
 @Injectable()
 export class MemberService {
-	constructor(@InjectModel('Member') private readonly memberModel: Model<Member>,
+	constructor(
+		@InjectModel('Member') private readonly memberModel: Model<Member>,
   private authService: AuthService,
 ) {}
 
@@ -56,10 +58,17 @@ export class MemberService {
 		result.accessToken = await this.authService.createToken(result);
 		return result;
 	}
-
-	public async getMember(): Promise<string> {
-		return 'getMember executed!';
-	}
+	public async getMember(targetId: ObjectId): Promise<Member> {
+        const search: T = {
+            _id: targetId,
+            memberStatus: {
+                $in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
+            },
+        };
+        const targetMember = await this.memberModel.findOne(search).exec();
+        if(!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+        return targetMember;
+    }
 
   public async getAllMembersByAdmin(): Promise<string> {
 		return 'getAllMembersByAdmin!';
