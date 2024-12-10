@@ -87,6 +87,7 @@ export class TotalCounter {
 	@Field(() => Int, { nullable: true })
 	total: number;
 }
+
 @ObjectType()
 export class Members {
 	@Field(() => [Member])
