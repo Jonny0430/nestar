@@ -1,8 +1,10 @@
 {
     "cSpell.words": [
         "Authenticeted",
+        "dotenv",
         "nestar",
         "nestjs",
+        "pids",
         "uuidv"
     ]
 }
