@@ -64,7 +64,7 @@ export class PropertyService {
 		};
 		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
 		else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
-		const result = await this.propertyModel.findOneAndUpdate(search, input, { new: true }).exec();
+		const result = await this.propertyModel.findByIdAndUpdate(search, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		if (soldAt || deletedAt) {
 			await this.memberService.memberStatsEditor({
@@ -193,7 +193,7 @@ export class PropertyService {
 		};
 		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
 		else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
-		const result = await this.propertyModel.findOneAndUpdate(search, input, { new: true }).exec();
+		const result = await this.propertyModel.findByIdAndUpdate(search, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		if (soldAt || deletedAt) {
 			await this.memberService.memberStatsEditor({
@@ -213,6 +213,6 @@ export class PropertyService {
 	}
 	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
 		const { _id, targetKey, modifier } = input;
-		return await this.propertyModel.findOneAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+		return await this.propertyModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	}
 }
