@@ -85,7 +85,6 @@ export class Member {
 	/** from aggregation */
 	@Field(() => [MeLiked], { nullable: true })
 	meLiked?: MeLiked[];
-
 }
 
 @ObjectType()
