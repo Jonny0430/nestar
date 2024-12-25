@@ -9,6 +9,7 @@ import { ComponentsModule } from './components/components.module';
 import { DatabaseModule } from './database/database.module';
 import { T } from './libs/types/common';
 import { FollowResolver } from './service/follow/follow.resolver';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
 	imports: [
@@ -30,6 +31,7 @@ import { FollowResolver } from './service/follow/follow.resolver';
 		}),
 		ComponentsModule,
 		DatabaseModule,
+		SocketModule,
 	],
 	controllers: [AppController],
 	providers: [AppService, AppResolver, FollowResolver],
